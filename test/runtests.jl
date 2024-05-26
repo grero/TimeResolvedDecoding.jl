@@ -20,7 +20,8 @@ using Test
         X[:,1,i] = μ[:,k]
     end
     X .+= 0.0001*randn(rng, size(X))
-    pq = TimeResolvedDecoding.decode_target_location(I(ndims), X,trialid)
+    trainidx = Vector{Vector{Int64}}(undef, 100)
+    pq = TimeResolvedDecoding.decode_target_location(I(ndims), X,trialid, trainidx)
     
     μ = dropdims(mean(pq.perf,dims=3),dims=3)
     @test μ ≈ [1.0;;]
@@ -53,7 +54,8 @@ end
         X[:,4,i] .= R3*X[:,1,i]
     end
     X .+= 0.0001*randn(rng, size(X))
-    pq = TimeResolvedDecoding.decode_target_location(I(ndims), X,trialid, [[1:nbins;] for i in 1:nbins];rng=rng)
+    trainidx = Vector{Vector{Int64}}(undef, 100)
+    pq = TimeResolvedDecoding.decode_target_location(I(ndims), X,trialid, trainidx, [[1:nbins;] for i in 1:nbins];rng=rng)
     
     μ = dropdims(mean(pq.perf,dims=3),dims=3)
     @test μ ≈ [0.95 0.5090000000000002 0.4909999999999997 0.5090000000000002;
